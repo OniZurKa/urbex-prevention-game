@@ -27,6 +27,9 @@ INC_DIR := include
 HDR_DIR := src/headers
 LIB_DIR := lib/raylib
 
+# 👉 Chemin vers la lib compilée
+RAYLIB_BUILD := $(LIB_DIR)/build/raylib
+
 # ========================
 # Fichiers
 # ========================
@@ -49,15 +52,25 @@ CFLAGS := -Wall -Wextra -I$(INC_DIR) -I$(HDR_DIR) -I$(LIB_DIR)/include
 ifeq ($(OS_NAME),Windows)
     BIN := $(BIN_DIR)/$(NAME).exe
     RPATH_FLAG :=
-    LDFLAGS := -L$(LIB_DIR)/src -lraylib -lopengl32 -lgdi32 -lwinmm -static
+    LDFLAGS := -L$(RAYLIB_BUILD) -lraylib -lopengl32 -lgdi32 -lwinmm -static
+
 else ifeq ($(OS_NAME),MacOS)
     BIN := $(BIN_DIR)/$(NAME)
-    RPATH_FLAG := -Wl,-rpath,@loader_path/../$(LIB_DIR)
-    LDFLAGS := -L$(LIB_DIR)/src -lraylib -framework OpenGL -framework Cocoa -framework IOKit -framework CoreAudio -framework CoreVideo -framework Cocoa $(RPATH_FLAG)
+    RPATH_FLAG := -Wl,-rpath,@loader_path/../$(RAYLIB_BUILD)
+    LDFLAGS := -L$(RAYLIB_BUILD) -lraylib \
+        -framework OpenGL \
+        -framework Cocoa \
+        -framework IOKit \
+        -framework CoreAudio \
+        -framework CoreVideo \
+        $(RPATH_FLAG)
+
 else
     BIN := $(BIN_DIR)/$(NAME)
-    RPATH_FLAG := -Wl,-rpath,'$$ORIGIN/../$(LIB_DIR)'
-    LDFLAGS := -L$(LIB_DIR)/src -lraylib -lm -ldl -lpthread -lGL -lrt $(RPATH_FLAG)
+    RPATH_FLAG := -Wl,-rpath,'$$ORIGIN/../$(RAYLIB_BUILD)'
+    LDFLAGS := -L$(RAYLIB_BUILD) -lraylib \
+        -lm -ldl -lpthread -lGL -lrt \
+        $(RPATH_FLAG)
 endif
 
 # ========================

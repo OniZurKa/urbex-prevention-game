@@ -1,0 +1,544 @@
+============================================================================
+                    RÉFÉRENCE RAYLIB - FONCTIONS PRINCIPALES
+                        Version française - 2026
+============================================================================
+
+RAYLIB est une bibliothèque C/C++ pour faire des jeux et graphiques 2D/3D.
+
+
+============================================================================
+1. FENÊTRE & CONTEXTE
+============================================================================
+
+InitWindow(int width, int height, const char *title)
+    ├─ Crée une fenêtre avec les dimensions (width x height)
+    ├─ Title : titre de la fenêtre
+    ├─ À appeler AU DÉBUT du programme
+    └─ Exemple: InitWindow(1280, 720, "Mon Jeu")
+
+CloseWindow()
+    ├─ Ferme la fenêtre
+    ├─ Libère les ressources graphiques
+    ├─ À appeler À LA FIN du programme
+    └─ Exemple: CloseWindow()
+
+bool WindowShouldClose()
+    ├─ Retourne true si l'utilisateur veut fermer la fenêtre
+    ├─ Utile pour la boucle principale
+    └─ Exemple: while (!WindowShouldClose()) { /* jeu */ }
+
+SetTargetFPS(int fps)
+    ├─ Fixe le nombre d'images par seconde
+    ├─ fps=60 = 60 images par seconde
+    ├─ fps=144 = plus fluide
+    └─ Exemple: SetTargetFPS(60)
+
+float GetFrameTime()
+    ├─ Retourne le temps écoulé depuis la dernière frame (en secondes)
+    ├─ Utile pour le mouvement indépendant du FPS
+    ├─ Valeur typique: 0.016 (à 60 FPS)
+    └─ Exemple: velocity += acceleration * GetFrameTime()
+
+int GetScreenWidth() / int GetScreenHeight()
+    ├─ Retourne la largeur/hauteur actuelle de la fenêtre
+    └─ Exemple: int w = GetScreenWidth()
+
+
+============================================================================
+2. DESSIN DE BASE
+============================================================================
+
+BeginDrawing()
+    ├─ Appelle au DÉBUT de votre fonction de dessin
+    ├─ Démarre le cycle de rendu
+    └─ À faire AVANT tout DrawXxx() et EndDrawing()
+
+EndDrawing()
+    ├─ Appelle À LA FIN de votre fonction de dessin
+    ├─ Affiche tout ce qui a été dessiné
+    └─ À faire APRÈS BeginDrawing()
+
+ClearBackground(Color color)
+    ├─ Efface l'écran avec une couleur
+    ├─ À appeler au début du dessin
+    ├─ Couleurs prédéfinies: BLACK, WHITE, RED, GREEN, BLUE, GRAY
+    └─ Exemple: ClearBackground(BLACK)
+
+DrawFPS(int posX, int posY)
+    ├─ Affiche le nombre d'images par seconde dans le coin
+    ├─ Utile pour vérifier la performance
+    └─ Exemple: DrawFPS(10, 10)
+
+
+============================================================================
+3. CAMÉRA 3D & RENDU 3D
+============================================================================
+
+BeginMode3D(Camera3D camera)
+    ├─ Démarre le rendu 3D
+    ├─ À appeler AVANT de dessiner les objets 3D
+    ├─ Doit être fermé par EndMode3D()
+    └─ Exemple: BeginMode3D(camera)
+
+EndMode3D()
+    ├─ Termine le rendu 3D
+    ├─ À appeler APRÈS BeginMode3D()
+    └─ Exemple: EndMode3D()
+
+typedef struct Camera3D {
+    Vector3 position;       // Position de la caméra (X, Y, Z)
+    Vector3 target;         // Où regarde la caméra (X, Y, Z)
+    Vector3 up;            // Vecteur "haut" (normalement 0, 1, 0)
+    float fovy;            // Angle de vision vertical (60 est bon)
+    int projection;        // CAMERA_PERSPECTIVE ou CAMERA_ORTHOGRAPHIC
+} Camera3D;
+    ├─ Structure pour configurer la caméra
+    └─ Exemple:
+        Camera3D camera = {0};
+        camera.position = (Vector3){0, 2, 5};
+        camera.target = (Vector3){0, 0, 0};
+        camera.up = (Vector3){0, 1, 0};
+        camera.fovy = 60.0f;
+        camera.projection = CAMERA_PERSPECTIVE;
+
+
+============================================================================
+4. VECTEURS & MATHÉMATIQUES
+============================================================================
+
+typedef struct Vector3 {
+    float x;
+    float y;
+    float z;
+} Vector3;
+    ├─ Position ou direction en 3D
+    ├─ Exemple: Vector3 pos = {10.5f, 0.0f, 5.0f}
+    └─ Initialiser: Vector3 zero = {0, 0, 0}
+
+Vector3 Vector3Add(Vector3 v1, Vector3 v2)
+    ├─ Additionne deux vecteurs
+    └─ Exemple: Vector3 sum = Vector3Add(v1, v2)
+
+Vector3 Vector3Subtract(Vector3 v1, Vector3 v2)
+    ├─ Soustrait deux vecteurs
+    └─ Exemple: Vector3 diff = Vector3Subtract(v1, v2)
+
+Vector3 Vector3Scale(Vector3 v, float scalar)
+    ├─ Multiplie un vecteur par un nombre
+    ├─ Utile pour le mouvement
+    └─ Exemple: Vector3 scaled = Vector3Scale(velocity, 2.0f)
+
+float Vector3Length(Vector3 v)
+    ├─ Retourne la longueur/magnitude du vecteur
+    ├─ Utile pour vérifier la distance
+    └─ Exemple: float dist = Vector3Length(player_pos - enemy_pos)
+
+Vector3 Vector3Normalize(Vector3 v)
+    ├─ Retourne le vecteur normalisé (longueur = 1)
+    ├─ Utile pour les directions
+    └─ Exemple: Vector3 dir = Vector3Normalize(forward)
+
+float Vector3Distance(Vector3 v1, Vector3 v2)
+    ├─ Retourne la distance entre deux points
+    └─ Exemple: float d = Vector3Distance(player_pos, enemy_pos)
+
+
+============================================================================
+5. MODÈLES 3D
+============================================================================
+
+Model LoadModel(const char *fileName)
+    ├─ Charge un modèle 3D depuis un fichier
+    ├─ Formats supportés: .obj, .fbx, .gltf, .iqm
+    ├─ À appeler UNE FOIS au démarrage
+    ├─ À libérer avec UnloadModel()
+    └─ Exemple: Model wall_model = LoadModel("assets/wall.obj")
+
+void DrawModel(Model model, Vector3 position, float scale, Color tint)
+    ├─ Dessine un modèle 3D
+    ├─ position : où placer le modèle
+    ├─ scale : échelle (1.0 = taille normale, 2.0 = 2x plus gros)
+    ├─ tint : couleur (WHITE = couleur originale)
+    └─ Exemple: DrawModel(wall_model, {0, 0, 0}, 1.0f, WHITE)
+
+void DrawModelEx(Model model, Vector3 position, Vector3 rotationAxis, 
+                 float rotationAngle, Vector3 scale, Color tint)
+    ├─ Dessine un modèle avec rotation
+    ├─ rotationAxis : axe de rotation (ex: {0, 1, 0} pour Y)
+    ├─ rotationAngle : angle en degrés
+    ├─ scale : échelle sur X, Y, Z
+    └─ Exemple: DrawModelEx(model, pos, (Vector3){0,1,0}, 45.0f, 
+                            (Vector3){1,1,1}, WHITE)
+
+void UnloadModel(Model model)
+    ├─ Libère la mémoire du modèle
+    ├─ À appeler À LA FIN du programme
+    └─ Exemple: UnloadModel(wall_model)
+
+
+============================================================================
+6. COLLISIONS 3D
+============================================================================
+
+bool CheckCollisionSphereBox(Vector3 spherePosition, float sphereRadius, 
+                             BoundingBox box)
+    ├─ Vérifie collision sphère (joueur) vs boîte (mur)
+    ├─ spherePosition : centre de la sphère
+    ├─ sphereRadius : rayon (ex: 0.5 pour le joueur)
+    ├─ box : boîte de collision du mur
+    ├─ Retourne true/false
+    └─ Exemple: 
+        BoundingBox box = {(Vector3){0,0,0}, (Vector3){10,5,10}};
+        bool collision = CheckCollisionSphereBox(player_pos, 0.5f, box);
+
+RayCollision GetRayCollisionBox(Ray ray, BoundingBox box)
+    ├─ Lance un rayon et vérifie collision avec une boîte
+    ├─ ray : rayon (position + direction)
+    ├─ box : boîte à tester
+    ├─ Retourne structure avec infos de collision
+    └─ Exemple:
+        Ray ray = {{0,0,0}, {0,0,1}};
+        RayCollision collision = GetRayCollisionBox(ray, box);
+        
+typedef struct RayCollision {
+    bool hit;              // true si collision
+    float distance;        // distance jusqu'à collision
+    Vector3 point;         // point de collision en 3D
+    Vector3 normal;        // vecteur normal à la surface
+} RayCollision;
+
+
+============================================================================
+7. TEXTURES & IMAGES
+============================================================================
+
+Texture2D LoadTexture(const char *fileName)
+    ├─ Charge une image/texture depuis un fichier
+    ├─ Formats: .png, .jpg, .bmp, .tga
+    ├─ À appeler UNE FOIS au démarrage
+    ├─ À libérer avec UnloadTexture()
+    └─ Exemple: Texture2D wall_tex = LoadTexture("assets/wall.png")
+
+void UnloadTexture(Texture2D texture)
+    ├─ Libère la mémoire de la texture
+    └─ Exemple: UnloadTexture(wall_tex)
+
+void DrawTexture(Texture2D texture, int posX, int posY, Color tint)
+    ├─ Dessine une texture en 2D
+    ├─ posX, posY : position à l'écran
+    ├─ tint : couleur à appliquer (WHITE = couleur originale)
+    └─ Exemple: DrawTexture(my_texture, 100, 50, WHITE)
+
+
+============================================================================
+8. SONS & AUDIO
+============================================================================
+
+InitAudioDevice()
+    ├─ Initialise le système audio
+    ├─ À appeler AU DÉBUT si vous utilisez du son
+    └─ Exemple: InitAudioDevice()
+
+CloseAudioDevice()
+    ├─ Ferme le système audio
+    ├─ À appeler À LA FIN si vous avez utilisé InitAudioDevice()
+    └─ Exemple: CloseAudioDevice()
+
+Sound LoadSound(const char *fileName)
+    ├─ Charge un son depuis un fichier
+    ├─ Formats: .mp3, .wav, .ogg, .flac
+    ├─ À appeler UNE FOIS au démarrage
+    ├─ À libérer avec UnloadSound()
+    └─ Exemple: Sound explosion = LoadSound("assets/boom.wav")
+
+void PlaySound(Sound sound)
+    ├─ Joue un son UNE FOIS
+    ├─ Si déjà en train de jouer, recommence
+    └─ Exemple: PlaySound(explosion)
+
+void PlaySoundMulti(Sound sound)
+    ├─ Joue un son, peut jouer plusieurs fois simultanément
+    ├─ Différent de PlaySound() qui recommence
+    └─ Exemple: PlaySoundMulti(footstep)
+
+void StopSound(Sound sound)
+    ├─ Arrête un son en cours
+    └─ Exemple: StopSound(music)
+
+void SetSoundVolume(Sound sound, float volume)
+    ├─ Ajuste le volume d'un son (0.0 à 1.0)
+    ├─ 0.0 = silencieux, 1.0 = volume max
+    └─ Exemple: SetSoundVolume(explosion, 0.5f)
+
+void UnloadSound(Sound sound)
+    ├─ Libère la mémoire du son
+    └─ Exemple: UnloadSound(explosion)
+
+
+============================================================================
+9. INPUTS & CLAVIER
+============================================================================
+
+bool IsKeyDown(int key)
+    ├─ Retourne true si une touche est préssée
+    ├─ Codes: KEY_W, KEY_A, KEY_S, KEY_D, KEY_SPACE, KEY_ESCAPE
+    ├─ À appeler chaque frame
+    └─ Exemple: if (IsKeyDown(KEY_W)) player_move_forward()
+
+bool IsKeyPressed(int key)
+    ├─ Retourne true une seule fois au moment de la pression
+    ├─ Différent de IsKeyDown() qui dure tant que préssé
+    └─ Exemple: if (IsKeyPressed(KEY_SPACE)) player_jump()
+
+bool IsKeyReleased(int key)
+    ├─ Retourne true une seule fois au moment du relâchement
+    └─ Exemple: if (IsKeyReleased(KEY_SPACE)) end_jump()
+
+// Codes de touches principales:
+KEY_W, KEY_A, KEY_S, KEY_D     // Mouvement WASD
+KEY_Q, KEY_Z                    // Alternatives AZERTY
+KEY_SPACE                       // Espace
+KEY_ESCAPE                      // Échap
+KEY_E                           // Interaction
+KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT  // Flèches
+
+
+============================================================================
+10. SOURIS
+============================================================================
+
+Vector2 GetMousePosition()
+    ├─ Retourne la position actuelle de la souris à l'écran
+    ├─ Retourne X, Y en pixels
+    └─ Exemple: Vector2 mouse_pos = GetMousePosition()
+
+bool IsMouseButtonDown(int button)
+    ├─ Retourne true si bouton souris pressé
+    ├─ Boutons: MOUSE_LEFT_BUTTON, MOUSE_RIGHT_BUTTON, MOUSE_MIDDLE_BUTTON
+    └─ Exemple: if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) shoot()
+
+bool IsMouseButtonPressed(int button)
+    ├─ Retourne true une seule fois au clic
+    └─ Exemple: if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) action()
+
+void SetMousePosition(int x, int y)
+    ├─ Placer la souris à une position spécifique
+    ├─ Utile pour verrouiller la souris au centre
+    └─ Exemple: SetMousePosition(640, 360)
+
+float GetMouseWheelMove()
+    ├─ Retourne le mouvement de la molette (-1, 0, ou 1)
+    └─ Exemple: zoom_level += GetMouseWheelMove() * 0.1f
+
+
+============================================================================
+11. TEXTE & DIMENSIONS
+============================================================================
+
+typedef struct Vector2 {
+    float x;
+    float y;
+} Vector2;
+    ├─ Position ou taille en 2D
+    └─ Exemple: Vector2 pos = {100, 50}
+
+void DrawText(const char *text, int posX, int posY, int fontSize, Color color)
+    ├─ Dessine du texte à l'écran
+    ├─ text : chaîne de caractères à afficher
+    ├─ posX, posY : position à l'écran
+    ├─ fontSize : taille du texte (20 à 80 typique)
+    ├─ color : couleur (RED, GREEN, BLUE, WHITE, BLACK)
+    └─ Exemple: DrawText("Score: 100", 50, 50, 20, WHITE)
+
+int MeasureText(const char *text, int fontSize)
+    ├─ Retourne la largeur du texte en pixels
+    ├─ Utile pour centrer du texte
+    └─ Exemple: int w = MeasureText("Bonjour", 20)
+
+
+============================================================================
+12. COULEURS
+============================================================================
+
+typedef struct Color {
+    unsigned char r;    // Rouge (0-255)
+    unsigned char g;    // Vert (0-255)
+    unsigned char b;    // Bleu (0-255)
+    unsigned char a;    // Alpha/Opacité (0-255, 255=opaque)
+} Color;
+    └─ Structure pour définir une couleur
+
+Couleurs prédéfinies:
+    LIGHTGRAY   = {200, 200, 200, 255}
+    GRAY        = {130, 130, 130, 255}
+    DARKGRAY    = {80, 80, 80, 255}
+    YELLOW      = {255, 255, 0, 255}
+    GOLD        = {255, 215, 0, 255}
+    ORANGE      = {255, 165, 0, 255}
+    RED         = {255, 0, 0, 255}
+    MAROON      = {190, 33, 55, 255}
+    GREEN       = {0, 228, 48, 255}
+    LIME        = {0, 158, 47, 255}
+    DARKGREEN   = {0, 117, 44, 255}
+    SKYBLUE     = {102, 191, 255, 255}
+    BLUE        = {0, 121, 241, 255}
+    DARKBLUE    = {0, 82, 172, 255}
+    PURPLE      = {200, 122, 255, 255}
+    VIOLET      = {135, 60, 190, 255}
+    PINK        = {255, 109, 194, 255}
+    BLACK       = {0, 0, 0, 255}
+    WHITE       = {255, 255, 255, 255}
+
+Color ColorFromHSV(float hue, float saturation, float value)
+    ├─ Crée une couleur depuis HSV
+    ├─ hue : 0-360, saturation: 0-1, value: 0-1
+    └─ Exemple: Color red = ColorFromHSV(0, 1, 1)
+
+
+============================================================================
+13. FORMES 2D
+============================================================================
+
+void DrawRectangle(int posX, int posY, int width, int height, Color color)
+    ├─ Dessine un rectangle
+    └─ Exemple: DrawRectangle(100, 100, 200, 150, BLUE)
+
+void DrawCircle(int centerX, int centerY, float radius, Color color)
+    ├─ Dessine un cercle
+    └─ Exemple: DrawCircle(400, 300, 50, GREEN)
+
+void DrawLine(int startX, int startY, int endX, int endY, Color color)
+    ├─ Dessine une ligne
+    └─ Exemple: DrawLine(0, 0, 800, 600, WHITE)
+
+void DrawTriangle(Vector2 v1, Vector2 v2, Vector2 v3, Color color)
+    ├─ Dessine un triangle
+    └─ Exemple: 
+        DrawTriangle({100,100}, {200,50}, {200,150}, RED)
+
+
+============================================================================
+14. FORMES 3D
+============================================================================
+
+void DrawCube(Vector3 position, float width, float height, float length, Color color)
+    ├─ Dessine un cube 3D
+    ├─ À utiliser dans BeginMode3D() / EndMode3D()
+    └─ Exemple: DrawCube({0, 1, -5}, 2, 2, 2, RED)
+
+void DrawSphere(Vector3 centerPos, float radius, Color color)
+    ├─ Dessine une sphère 3D
+    ├─ À utiliser dans BeginMode3D() / EndMode3D()
+    └─ Exemple: DrawSphere({0, 5, 0}, 1.5f, BLUE)
+
+void DrawCubeWires(Vector3 position, float width, float height, float length, Color color)
+    ├─ Dessine un cube en fil de fer (skeleton)
+    ├─ Utile pour déboguer les collisions
+    └─ Exemple: DrawCubeWires({0, 1, -5}, 2, 2, 2, WHITE)
+
+void DrawGrid(int slices, float spacing)
+    ├─ Dessine une grille pour voir les axes
+    ├─ À utiliser dans BeginMode3D() / EndMode3D()
+    └─ Exemple: DrawGrid(10, 1.0f)
+
+
+============================================================================
+15. MATHÉMATIQUES UTILES
+============================================================================
+
+// Trigonométrie
+float sinf(float x)  // Sinus (angles en degrés/radians)
+float cosf(float x)  // Cosinus
+float tanf(float x)  // Tangente
+
+// Conversion
+float DEG2RAD = 0.017453293f  // Multiplicateur deg -> rad
+float RAD2DEG = 57.2957795f   // Multiplicateur rad -> deg
+Exemple: 
+    float angle_rad = 45.0f * DEG2RAD
+    float angle_deg = angle_rad * RAD2DEG
+
+// Min/Max
+float fminf(float a, float b)  // Minimum
+float fmaxf(float a, float b)  // Maximum
+
+Exemple: float clamped = fmaxf(0, fminf(speed, 10.0f))
+
+
+============================================================================
+16. EXEMPLE COMPLET - STRUCTURE DE JEU
+============================================================================
+
+#include "raylib.h"
+
+int main(void) {
+    // 1. INITIALISATION
+    InitWindow(1280, 720, "Mon Jeu");
+    SetTargetFPS(60);
+    
+    // Charger ressources
+    Model model = LoadModel("assets/cube.obj");
+    Texture2D texture = LoadTexture("assets/texture.png");
+    
+    // Créer caméra
+    Camera3D camera = {0};
+    camera.position = (Vector3){0, 2, 5};
+    camera.target = (Vector3){0, 0, 0};
+    camera.up = (Vector3){0, 1, 0};
+    camera.fovy = 60.0;
+    camera.projection = CAMERA_PERSPECTIVE;
+    
+    // 2. BOUCLE PRINCIPALE
+    while (!WindowShouldClose()) {
+        // Inputs
+        if (IsKeyDown(KEY_D)) camera.position.x += 0.05f;
+        if (IsKeyDown(KEY_A)) camera.position.x -= 0.05f;
+        
+        // DESSIN
+        BeginDrawing();
+            ClearBackground(BLACK);
+            
+            BeginMode3D(camera);
+                DrawModel(model, (Vector3){0, 0, 0}, 1.0f, WHITE);
+                DrawGrid(20, 1.0f);
+            EndMode3D();
+            
+            DrawFPS(10, 10);
+            DrawText("Utilisez A/D pour bouger", 50, 50, 20, WHITE);
+        EndDrawing();
+    }
+    
+    // 3. NETTOYAGE
+    UnloadModel(model);
+    UnloadTexture(texture);
+    CloseWindow();
+    
+    return 0;
+}
+
+
+============================================================================
+                              CONSEILS IMPORTANTS
+============================================================================
+
+✓ TOUJOURS initialiser avant d'utiliser:
+  - InitWindow() avant d'utiliser l'écran
+  - InitAudioDevice() avant d'utiliser le son
+  - LoadModel() au démarrage, pas en boucle
+
+✓ TOUJOURS nettoyer à la fin:
+  - UnloadModel(), UnloadTexture(), UnloadSound()
+  - CloseAudioDevice(), CloseWindow()
+
+✓ BeginDrawing() / EndDrawing() DOIT entourer tout le dessin
+
+✓ BeginMode3D() / EndMode3D() DOIT entourer le dessin 3D
+
+✓ Utiliser GetFrameTime() pour le mouvement indépendant du FPS
+
+✓ Vérifier WindowShouldClose() chaque frame
+
+✓ Les structures (Vector3, Color, etc.) peuvent être initialisées:
+  - Avec {x, y, z}
+  - Avec {0} pour tous les zéros
+
