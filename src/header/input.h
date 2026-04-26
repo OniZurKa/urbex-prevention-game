@@ -27,14 +27,14 @@ typedef struct input_t {
 	float mouse_y;
 } input_t;
 
-// 2. void input_update() - Met à jour l'état des entrées chaque frame
-// 3. bool input_is_forward() - Retourne si avant est pressé
-// 4. bool input_is_backward() - Retourne si arrière est pressé
-// 5. bool input_is_left() - Retourne si gauche est pressé
-// 6. bool input_is_right() - Retourne si droite est pressé
-// 7. bool input_is_jump() - Retourne si saut est pressé
-// 8. bool input_is_interact() - Retourne si E est pressé
-// 9. bool input_is_quit() - Retourne si ESC est pressé
-// 10. Vector2 input_get_mouse_delta() - Retourne mouvement souris
+void input_update() ; // Met à jour l'état des entrées chaque frame
+bool input_is_forward() ; // Retourne si avant est pressé
+bool input_is_backward() ; // Retourne si arrière est pressé
+bool input_is_left() ; // Retourne si gauche est pressé
+bool input_is_right() ; // Retourne si droite est pressé
+bool input_is_jump() ; // Retourne si saut est pressé
+bool input_is_interact() ; // Retourne si E est pressé
+bool input_is_quit() ; // Retourne si ESC est pressé
+Vector2 input_get_mouse_delta() ; // Retourne mouvement souris
 
 #endif

@@ -29,13 +29,13 @@ typedef struct level_t {
 	Vector3 spawn_point;
 	Vector3 exit_point;
 } level_t;
-//
-// 3. void level_init() - Crée et initialise le niveau
-// 4. void level_draw() - Dessine tous les modèles du niveau
-// 5. void level_update() - Met à jour la logique du niveau
-// 6. zone_t* level_get_zone_at(Vector3 pos) - Retourne la zone à une position
-// 7. bool level_is_collision(Vector3 before, Vector3 after) - Vérifie collision
-// 8. Vector3 level_get_spawn_point() - Retourne le point de départ
-// 9. Vector3 level_get_exit_point() - Retourne l'exit
+
+void level_init() ; // Crée et initialise le niveau
+void level_draw() ; // Dessine tous les modèles du niveau
+void level_update() ; // Met à jour la logique du niveau
+zone_t* level_get_zone_at(Vector3 pos) ; // Retourne la zone à une position
+bool level_is_collision(Vector3 before, Vector3 after) ; // Vérifie collision
+Vector3 level_get_spawn_point() ; // Retourne le point de départ
+Vector3 level_get_exit_point() ; // Retourne l'exit
 
 #endif

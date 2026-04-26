@@ -1,6 +1,9 @@
 #ifndef ENDING_H
 #define ENDING_H
 
+#include <stdbool.h>
+#include "player.h"
+
 /*
  * ===================================
  * ENDING - Système de fins du jeu
@@ -22,12 +25,12 @@ typedef enum {
      ENDING_NONE // encore en jeu
 } ending_type_t ;
 
-// 2. void ending_check(player_t* player) - Vérifie si conditions de fin sont atteintes
-// 3. ending_type_t ending_get_current() - Retourne la fin actuelle
-// 4. void ending_display() - Affiche l'écran de fin avec message
-// 5. const char* ending_get_message() - Retourne le message d'ending
-// 6. bool ending_is_reached() - Vérifie si une fin est atteinte
-// 7. void ending_reset() - Réinitialise pour nouvelle partie
-// 8. void ending_calculate(player_t* player) - Calcule l'ending basé sur player.state
+void ending_check(player_t* player) ; // Vérifie si conditions de fin sont atteintes
+ending_type_t ending_get_current() ; // Retourne la fin actuelle
+void ending_display() ; // Affiche l'écran de fin avec message
+const char* ending_get_message() ; // Retourne le message d'ending
+bool ending_is_reached() ; // Vérifie si une fin est atteinte
+void ending_reset() ; // Réinitialise pour nouvelle partie
+void ending_calculate(player_t* player) ; // Calcule l'ending basé sur player.state
 
 #endif

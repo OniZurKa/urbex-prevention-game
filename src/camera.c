@@ -10,12 +10,12 @@
  */
 
 #define CAMERA_SPEED 0.2f
-#define CAMERA_MOUSE_SENSITIVITY 0.1f
 #define CAMERA_HEIGHT 1.7f
 
 static Camera3D camera;
 static float yaw = 0.0f;
 static float pitch = 0.0f;
+static float camera_mouse_sensitivity = 0.1f;
 
 void camera_init() {
     // À implémenter :
@@ -62,9 +62,13 @@ void camera_move_right(float distance) {
 
 void camera_rotate(float dx, float dy) {
     // À implémenter :
-    // yaw += dx * CAMERA_MOUSE_SENSITIVITY
-    // pitch += dy * CAMERA_MOUSE_SENSITIVITY
+    // yaw += dx * camera_mouse_sensitivity
+    // pitch += dy * camera_mouse_sensitivity
     // Limiter pitch entre -85 et 85
+}
+
+void camera_set_mouse_sensitivity(float mouse_sensitivity) {
+    camera_mouse_sensitivity = mouse_sensitivity;
 }
 
 Vector3 camera_get_position() {

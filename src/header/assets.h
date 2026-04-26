@@ -28,14 +28,14 @@ typedef struct assets_t {
 	int texture_count;
 	int sound_count;
 } assets_t;
-//
-// 2. void assets_load_models() - Charge tous les modèles 3D
-// 3. void assets_load_textures() - Charge les textures
-// 4. void assets_load_sounds() - Charge les sons
-// 5. bool assets_check_all_loaded() - Vérifie que tout est chargé
-// 6. Model assets_get_model(const char* name) - Retourne un modèle par nom
-// 7. Texture2D assets_get_texture(const char* name) - Retourne une texture par nom
-// 8. Sound assets_get_sound(const char* name) - Retourne un son par nom
-// 9. void assets_unload_all() - Libère toutes les ressources
+
+void assets_load_models() ; // Charge tous les modèles 3D
+void assets_load_textures() ; // Charge les textures
+void assets_load_sounds() ; // Charge les sons
+bool assets_check_all_loaded() ; // Vérifie que tout est chargé
+Model assets_get_model(const char* name) ; // Retourne un modèle par nom
+Texture2D assets_get_texture(const char* name) ; // Retourne une texture par nom
+Sound assets_get_sound(const char* name) ; // Retourne un son par nom
+void assets_unload_all() ; // Libère toutes les ressources
 
 #endif

@@ -7,9 +7,13 @@
 #include "header/audio.h"
 #include "header/ending.h"
 #include "header/menu.h"
+#include "header/settings.h"
 #include "header/hud.h"
 #include "header/pause.h"
 #include "header/transition.h"
+#include "header/assets.h"
+#include "header/collision.h"
+#include "header/dangers.h"
 
 /*
  * ===================================
@@ -26,11 +30,13 @@
 // Variables globales
 static game_state_t game_state;
 static bool is_running = false;
+static game_state_t target_state;
 
 void game_init() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE);
     SetTargetFPS(FPS);
     menu_init_layout(WINDOW_WIDTH, WINDOW_HEIGHT);
+    settings_init_layout(WINDOW_WIDTH, WINDOW_HEIGHT);
     hud_init(WINDOW_WIDTH, WINDOW_HEIGHT);
     pause_init(WINDOW_WIDTH, WINDOW_HEIGHT);
     transition_init(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -38,8 +44,10 @@ void game_init() {
     camera_init();
     level_init();
     audio_init();
+    settings_apply();
     input_update();
     game_state = GAME_STATE_MENU;
+    target_state = GAME_STATE_MENU;
     is_running = true;
 }
 
@@ -58,6 +66,9 @@ void game_update(float delta_time) {
     switch (game_state) {
           case GAME_STATE_MENU:
               menu_update(&game_state, &is_running);
+              break;
+          case GAME_STATE_SETTINGS:
+              settings_update(&game_state, &is_running);
               break;
           case GAME_STATE_PLAYING:
               // game logic...
@@ -83,6 +94,9 @@ void game_draw() {
     switch (game_state) {
           case GAME_STATE_MENU:
               menu_draw(WINDOW_WIDTH, WINDOW_HEIGHT);
+              break;
+          case GAME_STATE_SETTINGS:
+              settings_draw(WINDOW_WIDTH, WINDOW_HEIGHT);
               break;
           case GAME_STATE_PLAYING:
               // rendu 3D du jeu + HUD

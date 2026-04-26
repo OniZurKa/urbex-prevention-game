@@ -32,13 +32,13 @@ typedef struct danger_zone_t {
      bool is_active;
      float damage_per_frame;
 } danger_zone_t;
-//
-// 3. void danger_init() - Initialise tous les dangers du niveau
-// 4. void danger_update(player_t* player) - Détecte si joueur est en danger
-// 5. void danger_apply_wet_damage(player_t* player) - Ajoute eau sur joueur
-// 6. void danger_apply_electricity(player_t* player) - Électrocute
-// 7. void danger_apply_gas(player_t* player) - Intoxique
-// 8. void danger_check_fall(player_t* player) - Détecte chute
-// 9. int danger_count_active() - Retourne combien de zones dangereuses actives
+
+void danger_init() ; // Initialise tous les dangers du niveau
+void danger_update(player_t* player) ; // Détecte si joueur est en danger
+void danger_apply_wet_damage(player_t* player) ; // Ajoute eau sur joueur
+void danger_apply_electricity(player_t* player) ; // Électrocute
+void danger_apply_gas(player_t* player) ; // Intoxique
+void danger_check_fall(player_t* player) ; // Détecte chute
+int danger_count_active() ; // Retourne combien de zones dangereuses actives
 
 #endif

@@ -11,6 +11,7 @@
 
 void audio_init() {
     InitAudioDevice() ; // Initialise Raylib audio
+    SetMasterVolume(0.8f);
     audio.sound_count = 0 ;
 }
 
@@ -50,9 +51,14 @@ void audio_stop_ambient() {
 }
 
 void audio_set_volume(float volume) {
-    // À implémenter :
-    // - Limiter volume entre 0.0 et 1.0
-    // - SetMasterVolume(volume)
+    if (volume < 0.0f) {
+        volume = 0.0f;
+    }
+    if (volume > 1.0f) {
+        volume = 1.0f;
+    }
+
+    SetMasterVolume(volume);
 }
 
 void audio_update() {

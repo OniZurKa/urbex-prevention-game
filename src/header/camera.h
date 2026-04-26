@@ -24,15 +24,16 @@ typedef struct camera_fps_t {
 	float speed;
 	float mouse_sens;
 } camera_fps_t;
-//
-// 2. void camera_init() - Initialise la caméra FPS
-// 3. void camera_update() - Gère les inputs clavier/souris pour déplacer la caméra
-// 4. void camera_move_forward(float distance) - Avance la caméra
-// 5. void camera_move_backward(float distance) - Recule la caméra
-// 6. void camera_move_left(float distance) - Déplace à gauche
-// 7. void camera_move_right(float distance) - Déplace à droite
-// 8. void camera_rotate(float dx, float dy) - Tourne la vue selon la souris
-// 9. Vector3 camera_get_position() - Retourne la position actuelle
-// 10. Vector3 camera_get_forward() - Retourne le vecteur avant (direction)
+
+void camera_init() ; // Initialise la caméra FPS
+void camera_update() ; // Gère les inputs clavier/souris pour déplacer la caméra
+void camera_move_forward(float distance) ; // Avance la caméra
+void camera_move_backward(float distance) ; // Recule la caméra
+void camera_move_left(float distance) ; // Déplace à gauche
+void camera_move_right(float distance) ; // Déplace à droite
+void camera_rotate(float dx, float dy) ; // Tourne la vue selon la souris
+void camera_set_mouse_sensitivity(float mouse_sensitivity) ; // Définit la sensibilité souris
+Vector3 camera_get_position() ; // Retourne la position actuelle
+Vector3 camera_get_forward() ; // Retourne le vecteur avant (direction)
 
 #endif
