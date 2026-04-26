@@ -1,4 +1,5 @@
-#include "raylib.h"
+#include <stddef.h>
+#include "../lib/raylib/src/raylib.h"
 #include "header/level.h"
 #include "header/assets.h"
 
@@ -8,22 +9,7 @@
  * ===================================
  */
 
-// À implémenter :
-// typedef struct {
-//     int type; // ENTRANCE, MAIN_HALL, STAIRS, WATER_ROOM, GAS_ROOM, EXIT
-//     BoundingBox bounds;
-//     Vector3 position;
-//     char name[64];
-// } zone_t;
-//
-// typedef struct {
-//     zone_t zones[10];
-//     int zone_count;
-//     Vector3 spawn_point;
-//     Vector3 exit_point;
-// } level_t;
-//
-// static level_t level;
+static level_t level;
 
 void level_init() {
     // À implémenter :

@@ -13,16 +13,23 @@
  * - Création d'ambiance immersive
  */
 
+typedef enum {
+    SOUND_AMBIENT_WIND,
+    SOUND_AMBIENT_METAL,
+    SOUND_AMBIENT_CRACK,
+    SOUND_EFFECT_SPLASH,
+    SOUND_EFFECT_ELECTRIC,
+    SOUND_EFFECT_DEATH,
+    SOUND_EFFECT_STEP
+} sound_type_t;
+
+typedef struct {
+    Sound sounds[20];
+    int sound_count;
+    Music ambient_music;
+} audio_system_t;
+
 // À implémenter :
-// 1. typedef enum sound_type_t :
-//    - SOUND_AMBIENT_WIND (vent constant)
-//    - SOUND_AMBIENT_METAL (grincement métal)
-//    - SOUND_AMBIENT_CRACK (craquements)
-//    - SOUND_EFFECT_SPLASH (bruit eau)
-//    - SOUND_EFFECT_ELECTRIC (bourdonnement électricité)
-//    - SOUND_EFFECT_DEATH (mort)
-//    - SOUND_EFFECT_STEP (pas)
-//
 // 2. void audio_init() - Initialise le contexte audio raylib
 // 3. void audio_load_sounds() - Charge tous les fichiers sons
 // 4. void audio_play_ambient() - Lance les sons ambiants en boucle

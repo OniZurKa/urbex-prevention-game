@@ -1,6 +1,9 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <stdbool.h>
+#include "../../lib/raylib/src/raylib.h"
+
 /*
  * ===================================
  * INPUT - Gestion des entrées
@@ -12,18 +15,18 @@
  * - Détection d'interações
  */
 
-// À implémenter :
-// 1. typedef struct input_t :
-//    - key_forward (W/Z) - booléen
-//    - key_backward (S) - booléen
-//    - key_left (A/Q) - booléen
-//    - key_right (D) - booléen
-//    - key_jump (SPACE) - booléen
-//    - key_interact (E) - booléen
-//    - key_quit (ESC) - booléen
-//    - mouse_x (position X)
-//    - mouse_y (position Y)
-//
+typedef struct input_t {
+	bool key_forward;
+	bool key_backward;
+	bool key_left;
+	bool key_right;
+	bool key_jump;
+	bool key_interact;
+	bool key_quit;
+	float mouse_x;
+	float mouse_y;
+} input_t;
+
 // 2. void input_update() - Met à jour l'état des entrées chaque frame
 // 3. bool input_is_forward() - Retourne si avant est pressé
 // 4. bool input_is_backward() - Retourne si arrière est pressé

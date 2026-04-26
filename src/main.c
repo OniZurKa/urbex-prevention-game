@@ -1,15 +1,19 @@
-#include "raylib.h"
-#include "header/core.h"
+#include "../lib/raylib/src/raylib.h"
+#include "header/main.h"
 #include "header/player.h"
 #include "header/camera.h"
 #include "header/level.h"
 #include "header/input.h"
 #include "header/audio.h"
 #include "header/ending.h"
+#include "header/menu.h"
+#include "header/hud.h"
+#include "header/pause.h"
+#include "header/transition.h"
 
 /*
  * ===================================
- * CORE - Système principal du jeu
+ * MAIN - Système principal du jeu
  * ===================================
  */
 
@@ -19,66 +23,96 @@
 #define FPS 60
 #define GAME_TITLE "Urbex Prevention Game"
 
-// Variables globales (à implémenter)
-// static game_state_t game_state;
-// static bool is_running = false;
+// Variables globales
+static game_state_t game_state;
+static bool is_running = false;
 
 void game_init() {
-    // À implémenter :
-    // 1. InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE)
-    // 2. SetTargetFPS(FPS)
-    // 3. Appeler player_init()
-    // 4. Appeler camera_init()
-    // 5. Appeler level_init()
-    // 6. Appeler audio_init()
-    // 7. Appeler input_update()
-    // 8. is_running = true
+    InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE);
+    SetTargetFPS(FPS);
+    menu_init_layout(WINDOW_WIDTH, WINDOW_HEIGHT);
+    hud_init(WINDOW_WIDTH, WINDOW_HEIGHT);
+    pause_init(WINDOW_WIDTH, WINDOW_HEIGHT);
+    transition_init(WINDOW_WIDTH, WINDOW_HEIGHT);
+    player_init();
+    camera_init();
+    level_init();
+    audio_init();
+    input_update();
+    game_state = GAME_STATE_MENU;
+    is_running = true;
 }
 
 void game_run() {
-    // À implémenter :
-    // Boucle principale :
-    // while (!WindowShouldClose()) {
-    //     float delta_time = GetFrameTime()
-    //     game_update(delta_time)
-    //     game_draw()
-    // }
+    while (!WindowShouldClose() && is_running) {
+         float delta_time = GetFrameTime();
+         game_update(delta_time);
+         game_draw();
+     }
 }
 
 void game_update(float delta_time) {
-    // À implémenter :
-    // 1. input_update() - Met à jour les contrôles
-    // 2. camera_update() - Met à jour la caméra
-    // 3. player_update() - Met à jour l'état du joueur
-    // 4. danger_update() - Cherhce les dangers
-    // 5. level_update() - Logique du niveau
-    // 6. ending_check() - Vérifie si fin atteinte
+
+    input_update() ; // Met à jour les contrôles
+    transition_update(&game_state, target_state) ; // Gère transitions entre etats
+    switch (game_state) {
+          case GAME_STATE_MENU:
+              menu_update(&game_state, &is_running);
+              break;
+          case GAME_STATE_PLAYING:
+              // game logic...
+              // Si ESC -> transition_start(GAME_STATE_PLAYING, GAME_STATE_PAUSED); game_state = GAME_STATE_PAUSED;
+              break;
+          case GAME_STATE_PAUSED:
+              pause_update(&is_running);
+              // Selon choix du joueur: transition vers PLAYING, MENU ou QUIT
+              break;
+          case GAME_STATE_ENDING:
+              // ending logic...
+              break;
+          case GAME_STATE_QUIT:
+              is_running = false;
+              break;
+        }
+    hud_update(game_state, delta_time);
+    (void)delta_time;
 }
 
 void game_draw() {
-    // À implémenter :
-    // 1. BeginDrawing()
-    // 2. ClearBackground(BLACK)
-    // 3. BeginMode3D(camera)
-    // 4. level_draw() - Dessine le niveau
-    // 5. EndMode3D()
-    // 6. // Affichage 2D (UI, debug)
-    // 7. if (ending_is_reached()) ending_display()
-    // 8. EndDrawing()
+    BeginDrawing() ;
+    switch (game_state) {
+          case GAME_STATE_MENU:
+              menu_draw(WINDOW_WIDTH, WINDOW_HEIGHT);
+              break;
+          case GAME_STATE_PLAYING:
+              // rendu 3D du jeu + HUD
+              // hud_draw_playing();
+              break;
+          case GAME_STATE_PAUSED:
+              // dessiner la scene figée ou fond noir
+              // pause_draw_overlay();
+              break;
+          case GAME_STATE_ENDING:
+              // hud_draw_ending();
+              break;
+          default:
+              ClearBackground(BLACK);
+              break;
+        }
+    transition_draw() ; // Affiche l'effet de transition par-dessus
+    EndDrawing() ;
 }
 
 void game_cleanup() {
-    // À implémenter :
-    // 1. assets_unload_all() - Libère ressources
-    // 2. audio_stop_ambient() - Arrête musique
-    // 3. CloseWindow() - Ferme la fenêtre raylib
-    // 4. is_running = false
+
+    assets_unload_all() ; // Libère ressources
+    audio_stop_ambient() ; // Arrête musique
+    CloseWindow() ; // Ferme la fenêtre raylib
+    is_running = false ;
 }
 
 bool game_is_running() {
-    // À implémenter :
-    // return is_running;
-    return false;
+    return is_running;
 }
 
 // Point d'entrée du programme

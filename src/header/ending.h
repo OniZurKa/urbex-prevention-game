@@ -12,15 +12,16 @@
  * - Génération des messages
  */
 
-// À implémenter :
-// 1. typedef enum ending_type_t :
-//    - ENDING_ALIVE (bonne fin - sort vivant sain et sauf)
-//    - ENDING_INJURED (fin neutre - survit mais blessé)
-//    - ENDING_ELECTROCUTION (mauvaise fin)
-//    - ENDING_FALL (mauvaise fin)
-//    - ENDING_INTOXICATION (mauvaise fin)
-//    - ENDING_NONE (encore en jeu)
-//
+
+typedef enum {
+     ENDING_ALIVE, // bonne fin - sort vivant sain et sauf
+     ENDING_INJURED, // fin neutre - survit mais blessé
+     ENDING_ELECTROCUTION, // mauvaise fin
+     ENDING_FALL, // mauvaise fin
+     ENDING_INTOXICATION, // mauvaise fin
+     ENDING_NONE // encore en jeu
+} ending_type_t ;
+
 // 2. void ending_check(player_t* player) - Vérifie si conditions de fin sont atteintes
 // 3. ending_type_t ending_get_current() - Retourne la fin actuelle
 // 4. void ending_display() - Affiche l'écran de fin avec message

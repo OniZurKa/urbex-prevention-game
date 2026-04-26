@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "../lib/raylib/src/raylib.h"
 #include "header/ending.h"
 #include "header/player.h"
 
@@ -8,17 +8,7 @@
  * ===================================
  */
 
-// À implémenter :
-// typedef enum {
-//     ENDING_ALIVE,
-//     ENDING_INJURED,
-//     ENDING_ELECTROCUTION,
-//     ENDING_FALL,
-//     ENDING_INTOXICATION,
-//     ENDING_NONE
-// } ending_type_t;
-//
-// static ending_type_t current_ending = ENDING_NONE;
+static ending_type_t current_ending = ENDING_NONE;
 
 void ending_check(player_t* player) {
     // À implémenter :

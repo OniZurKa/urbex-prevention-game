@@ -3,7 +3,7 @@
 
 /*
  * ===================================
- *  Système principal du jeu
+ * MAIN - Système principal du jeu
  * ===================================
  * 
  * Responsabilités :
@@ -12,6 +12,14 @@
  * - Gestion des états globaux
  * - Cleanup et fermeture
  */
+
+typedef enum {
+	GAME_STATE_MENU,
+	GAME_STATE_PLAYING,
+	GAME_STATE_PAUSED,
+	GAME_STATE_ENDING,
+	GAME_STATE_QUIT
+} game_state_t;
 
 // À implémenter :
 // 1. void game_init() - Initialise tout (fenêtre, raylib, joueur, niveau)

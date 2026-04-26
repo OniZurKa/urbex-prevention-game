@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "../lib/raylib/src/raylib.h"
 #include "header/player.h"
 #include "header/level.h"
 
@@ -8,18 +8,7 @@
  * ===================================
  */
 
-// À implémenter :
-// typedef struct {
-//     bool is_wet;
-//     bool entered_danger_zone;
-//     bool inhaled_gas;
-//     bool ignored_warning;
-//     int health;
-//     Vector3 position;
-//     Vector3 velocity;
-// } player_t;
-//
-// static player_t player;
+static player_t player;
 
 void player_init() {
     // À implémenter :

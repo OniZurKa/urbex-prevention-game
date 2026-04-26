@@ -1,6 +1,9 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <stdbool.h>
+#include "../../lib/raylib/src/raylib.h"
+
 /*
  * ===================================
  * PLAYER - État et conséquences
@@ -13,15 +16,15 @@
  * - Vérification des conditions de fin
  */
 
-// À implémenter :
-// 1. typedef struct player_t - Structure contenant :
-//    - is_wet (booléen)
-//    - entered_danger_zone (booléen)
-//    - inhaled_gas (booléen)
-//    - ignored_warning (booléen)
-//    - health (points de vie)
-//    - position (Vector3)
-//    - autres variables nécessaires
+typedef struct player_t {
+	bool is_wet;
+	bool entered_danger_zone;
+	bool inhaled_gas;
+	bool ignored_warning;
+	int health;
+	Vector3 position;
+	Vector3 velocity;
+} player_t;
 //
 // 2. void player_init() - Initialise le joueur
 // 3. void player_update() - Met à jour l'état du joueur

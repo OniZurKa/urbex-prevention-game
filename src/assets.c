@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "../lib/raylib/src/raylib.h"
 #include "header/assets.h"
 
 /*
@@ -7,17 +7,7 @@
  * ===================================
  */
 
-// À implémenter :
-// typedef struct {
-//     Model models[20];
-//     Texture2D textures[20];
-//     Sound sounds[20];
-//     int model_count;
-//     int texture_count;
-//     int sound_count;
-// } assets_t;
-//
-// static assets_t assets;
+static assets_t assets;
 
 void assets_load_models() {
     // À implémenter :

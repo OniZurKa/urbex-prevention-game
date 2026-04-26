@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "../lib/raylib/src/raylib.h"
 #include "header/dangers.h"
 #include "header/player.h"
 
@@ -8,24 +8,8 @@
  * ===================================
  */
 
-// À implémenter :
-// typedef enum {
-//     DANGER_WET_FLOOR,
-//     DANGER_ELECTRICITY,
-//     DANGER_GAS,
-//     DANGER_UNSTABLE,
-//     DANGER_HEIGHT
-// } danger_type_t;
-//
-// typedef struct {
-//     danger_type_t type;
-//     BoundingBox bounds;
-//     bool is_active;
-//     float damage_per_frame;
-// } danger_zone_t;
-//
-// static danger_zone_t dangers[20];
-// static int danger_count = 0;
+static danger_zone_t dangers[20];
+static int danger_count = 0;
 
 void danger_init() {
     // À implémenter :

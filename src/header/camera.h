@@ -1,6 +1,8 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+#include "../../lib/raylib/src/raylib.h"
+
 /*
  * ===================================
  * CAMERA - Gestion caméra FPS
@@ -13,15 +15,15 @@
  * - Collision avec les murs
  */
 
-// À implémenter :
-// 1. typedef struct camera_fps_t - Structure contenant :
-//    - position (Vector3)
-//    - target (Vector3 - où regarde la caméra)
-//    - up (Vector3)
-//    - fovy (angle de vision vertical)
-//    - projection (PERSPECTIVE ou ORTHOGRAPHIC)
-//    - vitesse de mouvement
-//    - sensibilité souris
+typedef struct camera_fps_t {
+	Vector3 position;
+	Vector3 target;
+	Vector3 up;
+	float fovy;
+	int projection;
+	float speed;
+	float mouse_sens;
+} camera_fps_t;
 //
 // 2. void camera_init() - Initialise la caméra FPS
 // 3. void camera_update() - Gère les inputs clavier/souris pour déplacer la caméra

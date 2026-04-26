@@ -1,6 +1,9 @@
 #ifndef ASSETS_H
 #define ASSETS_H
 
+#include <stdbool.h>
+#include "../../lib/raylib/src/raylib.h"
+
 /*
  * ===================================
  * ASSETS - Gestion des ressources
@@ -13,14 +16,18 @@
  * - Gestion de la mémoire des ressources
  */
 
-// À implémenter :
-// 1. typedef struct assets_t :
-//    - modèles[] (Model - structures Raylib)
-//    - textures[] (Texture2D - images Raylib)
-//    - sounds[] (Sound - sons Raylib)
-//    - model_count
-//    - texture_count
-//    - sound_count
+#define ASSETS_MAX_MODELS 20
+#define ASSETS_MAX_TEXTURES 20
+#define ASSETS_MAX_SOUNDS 20
+
+typedef struct assets_t {
+	Model models[ASSETS_MAX_MODELS];
+	Texture2D textures[ASSETS_MAX_TEXTURES];
+	Sound sounds[ASSETS_MAX_SOUNDS];
+	int model_count;
+	int texture_count;
+	int sound_count;
+} assets_t;
 //
 // 2. void assets_load_models() - Charge tous les modèles 3D
 // 3. void assets_load_textures() - Charge les textures

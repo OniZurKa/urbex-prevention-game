@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "../lib/raylib/src/raylib.h"
 #include "header/camera.h"
 #include "header/input.h"
 #include "header/collision.h"
@@ -13,20 +13,9 @@
 #define CAMERA_MOUSE_SENSITIVITY 0.1f
 #define CAMERA_HEIGHT 1.7f
 
-// À implémenter :
-// typedef struct {
-//     Vector3 position;
-//     Vector3 target;
-//     Vector3 up;
-//     float fovy;
-//     int projection;
-//     float speed;
-//     float mouse_sens;
-// } camera_fps_t;
-//
-// static Camera3D camera;
-// static float yaw = 0.0f;
-// static float pitch = 0.0f;
+static Camera3D camera;
+static float yaw = 0.0f;
+static float pitch = 0.0f;
 
 void camera_init() {
     // À implémenter :

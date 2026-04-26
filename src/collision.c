@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "../lib/raylib/src/raylib.h"
 #include "header/collision.h"
 
 /*
@@ -6,14 +6,6 @@
  * COLLISION - Système de collision
  * ===================================
  */
-
-// À implémenter :
-// typedef struct {
-//     bool has_collision;
-//     Vector3 collision_point;
-//     Vector3 collision_normal;
-//     int collision_object_id;
-// } collision_t;
 
 bool collision_check_sphere_box(Vector3 sphere_pos, float sphere_radius, BoundingBox box) {
     // À implémenter :

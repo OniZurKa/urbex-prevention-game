@@ -1,6 +1,9 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
+#include <stdbool.h>
+#include "../../lib/raylib/src/raylib.h"
+
 /*
  * ===================================
  * LEVEL - Gestion des niveaux/zones
@@ -13,19 +16,19 @@
  * - Gestion des points de spawn
  */
 
-// À implémenter :
-// 1. typedef struct zone_t - Définit une zone :
-//    - type (ENTRANCE, MAIN_HALL, STAIRS, WATER_ROOM, GAS_ROOM, EXIT)
-//    - bounds (BoundingBox pour les collisions)
-//    - position
-//    - name (pour debug)
-//
-// 2. typedef struct level_t - Contient :
-//    - zones[] - Tableau de zones
-//    - zone_count - Nombre de zones
-//    - objets 3D (modèles chargés)
-//    - positions/rotations des objets
-//    - spawn_point (Vector3)
+typedef struct zone_t {
+	int type; // ENTRANCE, MAIN_HALL, STAIRS, WATER_ROOM, GAS_ROOM, EXIT
+	BoundingBox bounds;
+	Vector3 position;
+	char name[64];
+} zone_t;
+
+typedef struct level_t {
+	zone_t zones[10];
+	int zone_count;
+	Vector3 spawn_point;
+	Vector3 exit_point;
+} level_t;
 //
 // 3. void level_init() - Crée et initialise le niveau
 // 4. void level_draw() - Dessine tous les modèles du niveau

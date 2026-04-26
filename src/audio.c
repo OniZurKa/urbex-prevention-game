@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "../lib/raylib/src/raylib.h"
 #include "header/audio.h"
 
 /*
@@ -7,19 +7,11 @@
  * ===================================
  */
 
-// À implémenter :
-// typedef struct {
-//     Sound sounds[20];
-//     int sound_count;
-//     Music ambient_music;
-// } audio_system_t;
-//
-// static audio_system_t audio;
+ static audio_system_t audio;
 
 void audio_init() {
-    // À implémenter :
-    // - InitAudioDevice() - Initialise Raylib audio
-    // - audio.sound_count = 0
+    InitAudioDevice() ; // Initialise Raylib audio
+    audio.sound_count = 0 ;
 }
 
 void audio_load_sounds() {

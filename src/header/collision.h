@@ -1,6 +1,11 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
+#include <stdbool.h>
+#include "../../lib/raylib/src/raylib.h"
+
+typedef struct level_t level_t;
+
 /*
  * ===================================
  * COLLISION - Système de collision
@@ -12,12 +17,12 @@
  * - Gestion des murs, objets, sol
  */
 
-// À implémenter :
-// 1. typedef struct collision_t - Structure collision :
-//    - has_collision (booléen)
-//    - collision_point (Vector3)
-//    - collision_normal (Vector3)
-//    - collision_object_id (pour savoir ce qu'on a heurté)
+typedef struct collision_t {
+	bool has_collision;
+	Vector3 collision_point;
+	Vector3 collision_normal;
+	int collision_object_id;
+} collision_t;
 //
 // 2. bool collision_check_sphere_box(Vector3 sphere_pos, float sphere_radius, BoundingBox box)
 //    - Vérifie collision sphère/boîte (joueur/mur)

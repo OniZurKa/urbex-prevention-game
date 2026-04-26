@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "../lib/raylib/src/raylib.h"
 #include "header/input.h"
 
 /*
@@ -7,21 +7,8 @@
  * ===================================
  */
 
-// À implémenter :
-// typedef struct {
-//     bool key_forward;
-//     bool key_backward;
-//     bool key_left;
-//     bool key_right;
-//     bool key_jump;
-//     bool key_interact;
-//     bool key_quit;
-//     float mouse_x;
-//     float mouse_y;
-// } input_t;
-//
-// static input_t input;
-// static Vector2 mouse_last_pos;
+static input_t input;
+static Vector2 mouse_last_pos;
 
 void input_update() {
     // À implémenter :
