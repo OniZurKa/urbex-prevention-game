@@ -13,6 +13,7 @@ void audio_init() {
     InitAudioDevice() ; // Initialise Raylib audio
     SetMasterVolume(0.8f);
     audio.sound_count = 0 ;
+    audio.ambient_music = (Music){0};
 }
 
 void audio_load_sounds() {

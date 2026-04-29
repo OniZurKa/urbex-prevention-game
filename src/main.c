@@ -40,9 +40,12 @@ void game_init() {
     hud_init(WINDOW_WIDTH, WINDOW_HEIGHT);
     pause_init(WINDOW_WIDTH, WINDOW_HEIGHT);
     transition_init(WINDOW_WIDTH, WINDOW_HEIGHT);
+    level_init();
+    danger_init();
+    ending_reset();
+    pause_set_active(false);
     player_init();
     camera_init();
-    level_init();
     audio_init();
     settings_apply();
     input_update();
@@ -64,27 +67,46 @@ void game_update(float delta_time) {
     input_update() ; // Met à jour les contrôles
     transition_update(&game_state, target_state) ; // Gère transitions entre etats
     switch (game_state) {
-          case GAME_STATE_MENU:
-              menu_update(&game_state, &is_running);
-              break;
-          case GAME_STATE_SETTINGS:
-              settings_update(&game_state, &is_running);
-              break;
+            case GAME_STATE_MENU: {
+                game_state_t prev_state = game_state;
+                menu_update(&game_state, &is_running);
+                if (game_state != prev_state) {
+                  target_state = game_state;
+                }
+                break;
+            }
+            case GAME_STATE_SETTINGS: {
+                game_state_t prev_state = game_state;
+                settings_update(&game_state, &is_running);
+                if (game_state != prev_state) {
+                  target_state = game_state;
+                }
+                break;
+            }
           case GAME_STATE_PLAYING:
-              // game logic...
-              // Si ESC -> transition_start(GAME_STATE_PLAYING, GAME_STATE_PAUSED); game_state = GAME_STATE_PAUSED;
-              break;
+                camera_update();
+                if (!transition_is_playing() && input_is_quit()) {
+                    target_state = GAME_STATE_PAUSED;
+                    pause_set_active(true);
+                    transition_start(game_state, target_state);
+                }
+                break;
           case GAME_STATE_PAUSED:
-              pause_update(&is_running);
-              // Selon choix du joueur: transition vers PLAYING, MENU ou QUIT
-              break;
+                pause_update(&is_running);
+                // Reprise vers PLAYING via ESC si aucune transition n'est en cours
+                if (!transition_is_playing() && input_is_quit()) {
+                    target_state = GAME_STATE_PLAYING;
+                    pause_set_active(false);
+                    transition_start(game_state, target_state);
+                }
+                break;
           case GAME_STATE_ENDING:
-              // ending logic...
-              break;
+                // ending logic...
+                break;
           case GAME_STATE_QUIT:
-              is_running = false;
-              break;
-        }
+                is_running = false;
+                break;
+    }
     hud_update(game_state, delta_time);
     (void)delta_time;
 }
@@ -99,15 +121,34 @@ void game_draw() {
               settings_draw(WINDOW_WIDTH, WINDOW_HEIGHT);
               break;
           case GAME_STATE_PLAYING:
-              // rendu 3D du jeu + HUD
-              // hud_draw_playing();
+              ClearBackground((Color){18, 24, 32, 255});
+              {
+                  Vector3 cam_position = camera_get_position();
+                  Vector3 cam_forward = camera_get_forward();
+                  Camera3D render_camera = {0};
+
+                  render_camera.position = cam_position;
+                  render_camera.target = (Vector3){cam_position.x + cam_forward.x, cam_position.y + cam_forward.y, cam_position.z + cam_forward.z};
+                  render_camera.up = (Vector3){0.0f, 1.0f, 0.0f};
+                  render_camera.fovy = 60.0f;
+                  render_camera.projection = CAMERA_PERSPECTIVE;
+
+                  BeginMode3D(render_camera);
+                  DrawPlane((Vector3){12.0f, 0.0f, 12.0f}, (Vector2){40.0f, 40.0f}, (Color){55, 62, 68, 255});
+                  DrawGrid(20, 1.0f);
+                  level_draw();
+                  DrawCube(level_get_spawn_point(), 0.5f, 0.5f, 0.5f, GREEN);
+                  DrawCube(level_get_exit_point(), 0.7f, 0.7f, 0.7f, GOLD);
+                  EndMode3D();
+              }
+              hud_draw_playing();
               break;
           case GAME_STATE_PAUSED:
               // dessiner la scene figée ou fond noir
-              // pause_draw_overlay();
+              pause_draw_overlay();
               break;
           case GAME_STATE_ENDING:
-              // hud_draw_ending();
+              hud_draw_ending();
               break;
           default:
               ClearBackground(BLACK);

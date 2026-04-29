@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <string.h>
 #include "../lib/raylib/src/raylib.h"
 #include "header/level.h"
 #include "header/assets.h"
@@ -12,60 +13,80 @@
 static level_t level;
 
 void level_init() {
-    // À implémenter :
-    // 1. Créer et initialiser les zones de l'usine :
-    //    - Entrée
-    //    - Hall principal
-    //    - Escalier instable
-    //    - Salle avec eau/câble
-    //    - Salle avec gaz
-    //    - Sortie
-    // 2. Définir spawn_point (entrée)
-    // 3. Définir exit_point
-    // 4. Charger les modèles 3D des zones
-    // 5. Initialiser les collisions
+    level.zone_count = 6;
+    level.spawn_point = (Vector3){0.0f, 1.7f, 0.0f};
+    level.exit_point = (Vector3){24.0f, 1.7f, 18.0f};
+
+    level.zones[0].type = 0;
+    level.zones[0].bounds = (BoundingBox){(Vector3){-4.0f, 0.0f, -4.0f}, (Vector3){4.0f, 4.0f, 4.0f}};
+    level.zones[0].position = (Vector3){0.0f, 2.0f, 0.0f};
+    strcpy(level.zones[0].name, "Entrance");
+
+    level.zones[1].type = 1;
+    level.zones[1].bounds = (BoundingBox){(Vector3){6.0f, 0.0f, -4.0f}, (Vector3){16.0f, 4.0f, 6.0f}};
+    level.zones[1].position = (Vector3){11.0f, 2.0f, 1.0f};
+    strcpy(level.zones[1].name, "Main Hall");
+
+    level.zones[2].type = 2;
+    level.zones[2].bounds = (BoundingBox){(Vector3){16.0f, 0.0f, 6.0f}, (Vector3){20.0f, 5.0f, 12.0f}};
+    level.zones[2].position = (Vector3){18.0f, 2.5f, 9.0f};
+    strcpy(level.zones[2].name, "Stairs");
+
+    level.zones[3].type = 3;
+    level.zones[3].bounds = (BoundingBox){(Vector3){-2.0f, 0.0f, 10.0f}, (Vector3){8.0f, 3.0f, 18.0f}};
+    level.zones[3].position = (Vector3){3.0f, 1.5f, 14.0f};
+    strcpy(level.zones[3].name, "Water Room");
+
+    level.zones[4].type = 4;
+    level.zones[4].bounds = (BoundingBox){(Vector3){10.0f, 0.0f, 14.0f}, (Vector3){20.0f, 4.0f, 24.0f}};
+    level.zones[4].position = (Vector3){15.0f, 2.0f, 19.0f};
+    strcpy(level.zones[4].name, "Gas Room");
+
+    level.zones[5].type = 5;
+    level.zones[5].bounds = (BoundingBox){(Vector3){22.0f, 0.0f, 14.0f}, (Vector3){28.0f, 4.0f, 22.0f}};
+    level.zones[5].position = (Vector3){25.0f, 2.0f, 18.0f};
+    strcpy(level.zones[5].name, "Exit");
 }
 
 void level_draw() {
-    // À implémenter :
-    // Pour chaque zone du niveau :
-    // - Appeler DrawModel() avec le bon modèle
-    // - Positionner et afficher l'objet
-    // 
-    // Optionnel : utiliser DrawModelEx() pour rotation/scaling
+    for (int i = 0; i < level.zone_count; i++) {
+        BoundingBox box = level.zones[i].bounds;
+        Vector3 size = (Vector3){box.max.x - box.min.x, box.max.y - box.min.y, box.max.z - box.min.z};
+        Vector3 center = (Vector3){(box.min.x + box.max.x) * 0.5f, (box.min.y + box.max.y) * 0.5f, (box.min.z + box.max.z) * 0.5f};
+        Color color = Fade((Color){80, 120, 160, 255}, 0.35f);
+
+        DrawCubeV(center, size, color);
+        DrawCubeWiresV(center, size, Fade(RAYWHITE, 0.25f));
+    }
 }
 
 void level_update() {
-    // À implémenter :
-    // - Mise à jour des animations si relevant
-    // - Changements d'éclairage
-    // - Logique spécifique aux zones
 }
 
 zone_t* level_get_zone_at(Vector3 pos) {
-    // À implémenter :
-    // - Parcourir les zones
-    // - Vérifier si position se trouve dans bounds d'une zone
-    // - Retourner la zone encontrée ou NULL
+    for (int i = 0; i < level.zone_count; i++) {
+        BoundingBox box = level.zones[i].bounds;
+        if (pos.x >= box.min.x && pos.x <= box.max.x &&
+            pos.y >= box.min.y && pos.y <= box.max.y &&
+            pos.z >= box.min.z && pos.z <= box.max.z) {
+            return &level.zones[i];
+        }
+    }
     return NULL;
 }
 
 bool level_is_collision(Vector3 before, Vector3 after) {
-    // À implémenter :
-    // - Vérifier collision entre before et after
-    // - Utiliser collision_raycast() ou collision_check_sphere_box()
-    // - Retourner true si collision
+    (void)before;
+    if (after.y < 1.7f) {
+        return true;
+    }
     return false;
 }
 
 Vector3 level_get_spawn_point() {
-    // À implémenter :
-    // return level.spawn_point;
-    return (Vector3){0, 0, 0};
+    return level.spawn_point;
 }
 
 Vector3 level_get_exit_point() {
-    // À implémenter :
-    // return level.exit_point;
-    return (Vector3){0, 0, 0};
+    return level.exit_point;
 }

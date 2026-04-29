@@ -11,62 +11,68 @@
 static ending_type_t current_ending = ENDING_NONE;
 
 void ending_check(player_t* player) {
-    // À implémenter :
-    // Arrêter le jeu et déterminer la fin selon l'état du joueur
-    // Appeler ending_calculate(player)
+    ending_calculate(player);
 }
 
 ending_type_t ending_get_current() {
-    // À implémenter :
-    // return current_ending;
-    return 0;
+    return current_ending;
 }
 
 void ending_display() {
-    // À implémenter :
-    // Afficher un écran avec :
-    // - Le type de fin (texte + couleur)
-    // - Message explicatif
-    // - Bouton "Recommencer"
-    // - Bouton "Quitter"
+    const char *message = ending_get_message();
+
+    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(BLACK, 0.8f));
+    DrawText("FIN DE PARTIE", 60, 60, 48, RAYWHITE);
+    DrawText(message, 60, 130, 28, LIGHTGRAY);
+    DrawText("R - Recommencer", 60, 210, 24, RAYWHITE);
+    DrawText("Q - Quitter", 60, 245, 24, RAYWHITE);
 }
 
 const char* ending_get_message() {
-    // À implémenter :
-    // Retourner le message correspondant à l'ending :
-    // "Tu as exploré intelligemment... Tu as survécu!"  (ALIVE)
-    // "Tu as survécu mais blessé..."  (INJURED)
-    // "Erreur fatale... Électrocution"  (ELECTROCUTION)
-    // "Chute mortelle..."  (FALL)
-    // "Intoxication par les gaz..."  (INTOXICATION)
-    return "";
+    switch (current_ending) {
+        case ENDING_ALIVE:
+            return "Tu as explore intelligemment... Tu as survecu !";
+        case ENDING_INJURED:
+            return "Tu as survecu, mais blesse.";
+        case ENDING_ELECTROCUTION:
+            return "Erreur fatale... Electrocution.";
+        case ENDING_FALL:
+            return "Chute mortelle.";
+        case ENDING_INTOXICATION:
+            return "Intoxication par les gaz.";
+        case ENDING_NONE:
+        default:
+            return "Aucune fin atteinte.";
+    }
 }
 
 bool ending_is_reached() {
-    // À implémenter :
-    // return current_ending != ENDING_NONE;
-    return false;
+    return current_ending != ENDING_NONE;
 }
 
 void ending_reset() {
-    // À implémenter :
-    // current_ending = ENDING_NONE;
+    current_ending = ENDING_NONE;
 }
 
 void ending_calculate(player_t* player) {
-    // À implémenter :
-    // Logique complexe pour déterminer l'ending :
-    //
-    // Si joueur est mort (health <= 0) :
-    //   - Si electrocuted && wet = ENDING_ELECTROCUTION
-    //   - Si fall = ENDING_FALL
-    //   - Si intoxicated = ENDING_INTOXICATION
-    //
-    // Si joueur vivant mais a touché plusieurs dangers :
-    //   = ENDING_INJURED
-    //
-    // Si joueur a été prudent (pas de dégâts majeurs) :
-    //   = ENDING_ALIVE
-    //
-    // Sinon = ENDING_HURT ou variante
+    if (!player) {
+        return;
+    }
+
+    if (player->health <= 0) {
+        if (player->is_wet && player->ignored_warning) {
+            current_ending = ENDING_ELECTROCUTION;
+        } else if (player->inhaled_gas) {
+            current_ending = ENDING_INTOXICATION;
+        } else {
+            current_ending = ENDING_FALL;
+        }
+        return;
+    }
+
+    if (player->is_wet || player->entered_danger_zone || player->inhaled_gas || player->ignored_warning) {
+        current_ending = ENDING_INJURED;
+    } else {
+        current_ending = ENDING_ALIVE;
+    }
 }

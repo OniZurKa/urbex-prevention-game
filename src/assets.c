@@ -43,10 +43,7 @@ void assets_load_sounds() {
 }
 
 bool assets_check_all_loaded() {
-    // À implémenter :
-    // Vérifier que tous les assets sont chargés :
-    // return (assets.model_count > 0 && assets.texture_count > 0 && assets.sound_count > 0)
-    return false;
+    return (assets.model_count > 0 && assets.texture_count > 0 && assets.sound_count > 0);
 }
 
 Model assets_get_model(const char* name) {
@@ -74,11 +71,18 @@ Sound assets_get_sound(const char* name) {
 }
 
 void assets_unload_all() {
-    // À implémenter :
     // Pour chaque Model chargé :
-    //   UnloadModel(assets.models[i])
+    for (int i = 0; i < assets.model_count; i++) {
+        UnloadModel(assets.models[i]);
+    }
+
     // Pour chaque Texture :
-    //   UnloadTexture(assets.textures[i])
+    for (int i = 0; i < assets.texture_count; i++) {
+        UnloadTexture(assets.textures[i]);
+    }
+
     // Pour chaque Sound :
-    //   UnloadSound(assets.sounds[i])
+    for (int i = 0; i < assets.sound_count; i++) {
+        UnloadSound(assets.sounds[i]);
+    }
 }

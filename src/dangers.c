@@ -12,51 +12,101 @@ static danger_zone_t dangers[20];
 static int danger_count = 0;
 
 void danger_init() {
-    // À implémenter :
-    // - Créer danger_zone_t pour chaque danger du niveau
-    // - Eau + câble (électricité)
-    // - Gaz toxique (salle)
-    // - Escalier instable (chute)
-    // - Zones hautes (chute si tombent)
-    // - Enregistrer dans le tableau dangers[]
+    danger_count = 4;
+
+    dangers[0].type = DANGER_WET_FLOOR;
+    dangers[0].bounds = (BoundingBox){(Vector3){-1.5f, 0.0f, 11.0f}, (Vector3){6.0f, 2.0f, 17.5f}};
+    dangers[0].is_active = true;
+    dangers[0].damage_per_frame = 0.0f;
+
+    dangers[1].type = DANGER_ELECTRICITY;
+    dangers[1].bounds = (BoundingBox){(Vector3){1.0f, 0.0f, 12.0f}, (Vector3){3.5f, 2.5f, 15.0f}};
+    dangers[1].is_active = true;
+    dangers[1].damage_per_frame = 5.0f;
+
+    dangers[2].type = DANGER_GAS;
+    dangers[2].bounds = (BoundingBox){(Vector3){10.5f, 0.0f, 14.5f}, (Vector3){19.5f, 3.5f, 23.5f}};
+    dangers[2].is_active = true;
+    dangers[2].damage_per_frame = 2.0f;
+
+    dangers[3].type = DANGER_UNSTABLE;
+    dangers[3].bounds = (BoundingBox){(Vector3){16.0f, 0.0f, 5.5f}, (Vector3){20.5f, 5.0f, 12.5f}};
+    dangers[3].is_active = true;
+    dangers[3].damage_per_frame = 1.0f;
 }
 
 void danger_update(player_t* player) {
-    // À implémenter :
-    // - Pour chaque zone dangereuse active :
-    //   1. Vérifier si joueur est dedans
-    //   2. Appliquer les conséquences appropriées
-    //   3. Marquer variables du joueur
+    if (!player) {
+        return;
+    }
+
+    for (int i = 0; i < danger_count; i++) {
+        if (!dangers[i].is_active) {
+            continue;
+        }
+
+        if (player->position.x < dangers[i].bounds.min.x || player->position.x > dangers[i].bounds.max.x ||
+            player->position.y < dangers[i].bounds.min.y || player->position.y > dangers[i].bounds.max.y ||
+            player->position.z < dangers[i].bounds.min.z || player->position.z > dangers[i].bounds.max.z) {
+            continue;
+        }
+
+        switch (dangers[i].type) {
+            case DANGER_WET_FLOOR:
+                danger_apply_wet_damage(player);
+                break;
+            case DANGER_ELECTRICITY:
+                danger_apply_electricity(player);
+                break;
+            case DANGER_GAS:
+                danger_apply_gas(player);
+                break;
+            case DANGER_UNSTABLE:
+                danger_check_fall(player);
+                break;
+            case DANGER_HEIGHT:
+                danger_check_fall(player);
+                break;
+        }
+    }
 }
 
 void danger_apply_wet_damage(player_t* player) {
-    // À implémenter :
-    // - player_set_wet()
-    // - Ajouter dégâts si conséquence majeure
+    if (!player) {
+        return;
+    }
+
+    player_take_damage(1);
 }
 
 void danger_apply_electricity(player_t* player) {
-    // À implémenter :
-    // - Si joueur mouillé ET près du câble = électrocution
-    // - player_take_damage() important
+    if (!player) {
+        return;
+    }
+
+    player_set_danger_zone();
+    player_take_damage(player->is_wet ? 30 : 10);
 }
 
 void danger_apply_gas(player_t* player) {
-    // À implémenter :
-    // - player_set_gas()
-    // - Dégâts progressifs si reste trop longtemps
+    if (!player) {
+        return;
+    }
+
+    player_take_damage(3);
 }
 
 void danger_check_fall(player_t* player) {
-    // À implémenter :
-    // - Vérifier si joueur tombe d'une hauteur
-    // - Calculer dégâts selon hauteur
-    // - player_take_damage()
+    if (!player) {
+        return;
+    }
+
+    if (player->position.y < 0.0f) {
+        player_set_warning_ignored();
+        player_take_damage(20);
+    }
 }
 
 int danger_count_active() {
-    // À implémenter :
-    // Compter combien de zones dangereuses sont actives
-    // return danger_count;
-    return 0;
+    return danger_count;
 }

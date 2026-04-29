@@ -11,55 +11,45 @@
 static player_t player;
 
 void player_init() {
-    // À implémenter :
-    // - Initialiser position au spawn point du niveau
-    // - health = 100
-    // - Tous les booléens = false
-    // - velocity = {0, 0, 0}
+    player.is_wet = false;
+    player.entered_danger_zone = false;
+    player.inhaled_gas = false;
+    player.ignored_warning = false;
+    player.health = 100;
+    player.position = level_get_spawn_point();
+    player.velocity = (Vector3){0.0f, 0.0f, 0.0f};
 }
 
 void player_update() {
-    // À implémenter :
-    // - Met à jour position/velocity
-    // - Applique gravité
-    // - Vérifie si mouvement possible (collision)
-    // - Applique conséquences si nécessaire
+    player.position = level_get_spawn_point();
+    player.velocity = (Vector3){0.0f, 0.0f, 0.0f};
 }
 
 void player_set_wet() {
-    // À implémenter :
-    // player.is_wet = true;
+    player.is_wet = true;
 }
 
 void player_set_danger_zone() {
-    // À implémenter :
-    // player.entered_danger_zone = true;
+    player.entered_danger_zone = true;
 }
 
 void player_set_gas() {
-    // À implémenter :
-    // player.inhaled_gas = true;
+    player.inhaled_gas = true;
 }
 
 void player_set_warning_ignored() {
-    // À implémenter :
-    // player.ignored_warning = true;
+    player.ignored_warning = true;
 }
 
 void player_take_damage(int amount) {
-    // À implémenter :
-    // player.health -= amount;
-    // if (player.health < 0) player.health = 0;
+    player.health -= amount;
+    if (player.health < 0) player.health = 0;
 }
 
 bool player_is_alive() {
-    // À implémenter :
-    // return player.health > 0;
-    return true;
+    return player.health > 0;
 }
 
 void player_reset() {
-    // À implémenter :
-    // Appeler player_init() pour réinitialiser
     player_init();
 }
