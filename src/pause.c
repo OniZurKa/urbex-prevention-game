@@ -30,7 +30,7 @@ void pause_draw_overlay(void) {
     DrawRectangleRounded((Rectangle){pause_window_width * 0.5f - 180.0f, pause_window_height * 0.5f - 100.0f, 360.0f, 200.0f}, 0.15f, 8, Fade(DARKGRAY, 0.9f));
     DrawText("PAUSE", (int)(pause_window_width * 0.5f - 70.0f), (int)(pause_window_height * 0.5f - 40.0f), 40, RAYWHITE);
     DrawText("ESC pour reprendre", (int)(pause_window_width * 0.5f - 115.0f), (int)(pause_window_height * 0.5f + 10.0f), 20, LIGHTGRAY);
-    DrawText("Q pour quitter", (int)(pause_window_width * 0.5f - 85.0f), (int)(pause_window_height * 0.5f + 40.0f), 20, LIGHTGRAY);
+    DrawText("A pour quitter", (int)(pause_window_width * 0.5f - 85.0f), (int)(pause_window_height * 0.5f + 40.0f), 20, LIGHTGRAY);
 }
 
 bool pause_is_active(void) {

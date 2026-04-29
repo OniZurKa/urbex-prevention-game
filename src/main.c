@@ -34,6 +34,7 @@ static game_state_t target_state;
 
 void game_init() {
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, GAME_TITLE);
+    SetExitKey(KEY_NULL);
     SetTargetFPS(FPS);
     menu_init_layout(WINDOW_WIDTH, WINDOW_HEIGHT);
     settings_init_layout(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -140,6 +141,8 @@ void game_draw() {
                   DrawCube(level_get_spawn_point(), 0.5f, 0.5f, 0.5f, GREEN);
                   DrawCube(level_get_exit_point(), 0.7f, 0.7f, 0.7f, GOLD);
                   EndMode3D();
+
+                  
               }
               hud_draw_playing();
               break;

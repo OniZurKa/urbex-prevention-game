@@ -21,7 +21,7 @@ void hud_draw_playing(void) {
 
     DrawLine(center_x - 8, center_y, center_x + 8, center_y, RAYWHITE);
     DrawLine(center_x, center_y - 8, center_x, center_y + 8, RAYWHITE);
-    DrawText("WASD deplacement | ESC pause", 20, 20, 20, RAYWHITE);
+    DrawText("ZQSD deplacement | ESC pause", 20, 20, 20, RAYWHITE);
 }
 
 void hud_draw_ending(void) {
